@@ -1,0 +1,48 @@
+# Render Blueprint — deploys the full AI Tutor Screener (FastAPI backend +
+# React SPA served from the same origin) as a single Docker web service.
+#
+# Setup:
+#   1. Push this repo to GitHub/GitLab and connect it to Render.
+#   2. "New +" → "Blueprint" → select the repo → Render reads this file.
+#   3. Set the AI provider env vars below (AI_PROVIDER defaults to mock,
+#      which needs no API keys — good for a first deploy).
+#
+# The service listens on the port Render injects via $PORT (Dockerfile CMD).
+
+services:
+  - type: web
+    name: ai-tutor-screener
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      # --- AI provider -----------------------------------------------------
+      # gemini = FASTEST + free tier (set AI_GEMINI_API_KEY to an "AIza..." key
+      #          from https://aistudio.google.com/app/apikey)
+      # nvidia = NVIDIA free endpoint (set AI_API_KEY); slower than flash
+      # mock   = offline canned responses (no API key required)
+      - key: AI_PROVIDER
+        value: gemini
+      - key: AI_GEMINI_MODELS
+        value: gemini-3.7-flash
+      - key: AI_GEMINI_MODEL
+        value: gemini-3.7-flash
+      - key: AI_GEMINI_API_KEY
+        sync: false
+      - key: AI_GEMINI_BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta
+      # --- NVIDIA (optional fallback) ---------------------------------------
+      - key: AI_MODEL
+        value: ""
+      - key: AI_MODELS
+        value: openai/gpt-oss-20b
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://integrate.api.nvidia.com/v1

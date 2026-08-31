@@ -1,0 +1,17 @@
+# Local testing: `docker compose up --build`
+# Serves the full app (React SPA + FastAPI) at http://localhost:8080.
+# Defaults to the mock AI provider so it runs fully offline.
+services:
+  app:
+    build: .
+    image: ai-tutor-screener:lean
+    container_name: ai-tutor-screener
+    ports:
+      - "8080:8080"
+    environment:
+      # mock = offline, no API key required
+      AI_PROVIDER: ${AI_PROVIDER:-mock}
+      APP_ENV: ${APP_ENV:-production}
+      # Uncomment and set to use a real provider:
+      # AI_API_KEY: ${AI_API_KEY:-}
+      # AI_MODEL: ${AI_MODEL:-}

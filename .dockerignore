@@ -1,0 +1,16 @@
+node_modules
+dist
+test-results
+coverage
+.venv
+backend/.venv
+backend/app/__pycache__
+*.pyc
+__pycache__
+.DS_Store
+# Secrets must never enter the build context or image.
+.env
+.env.*
+**/.env
+backend/.env
+backend/.env.*
